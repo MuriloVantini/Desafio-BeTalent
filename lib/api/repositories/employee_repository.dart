@@ -13,7 +13,6 @@ class EmployeeRepository implements IEmployeeRepository {
     try {
       final response = await MyHttpClient.get(
         url: '/employees',
-        headers: MyHttpClient.getHeaders(),
       );
 
       if (response.statusCode == 200) {

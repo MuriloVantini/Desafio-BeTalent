@@ -2,7 +2,7 @@
 import 'dart:convert';
 
 class EmployeeModel {
-  final int id;
+  final String id;
   final String name;
   final String job;
   final DateTime admissionDate;
@@ -18,7 +18,7 @@ class EmployeeModel {
   });
 
   EmployeeModel copyWith({
-    int? id,
+    String? id,
     String? name,
     String? job,
     DateTime? admissionDate,
@@ -48,10 +48,10 @@ class EmployeeModel {
 
   factory EmployeeModel.fromMap(Map<String, dynamic> map) {
     return EmployeeModel(
-      id: map['id'] as int,
+      id: map['id'] as String,
       name: map['name'] as String,
       job: map['job'] as String,
-      admissionDate: DateTime.fromMillisecondsSinceEpoch(map['admission_date'] as int),
+      admissionDate: DateTime.parse(map['admission_date'] as String),
       phone: map['phone'] as String,
       urlImage: map['image'] as String,
     );
@@ -69,23 +69,12 @@ class EmployeeModel {
   @override
   bool operator ==(covariant EmployeeModel other) {
     if (identical(this, other)) return true;
-  
-    return 
-      other.id == id &&
-      other.name == name &&
-      other.job == job &&
-      other.admissionDate == admissionDate &&
-      other.phone == phone &&
-      other.urlImage == urlImage;
+
+    return other.id == id && other.name == name && other.job == job && other.admissionDate == admissionDate && other.phone == phone && other.urlImage == urlImage;
   }
 
   @override
   int get hashCode {
-    return id.hashCode ^
-      name.hashCode ^
-      job.hashCode ^
-      admissionDate.hashCode ^
-      phone.hashCode ^
-      urlImage.hashCode;
+    return id.hashCode ^ name.hashCode ^ job.hashCode ^ admissionDate.hashCode ^ phone.hashCode ^ urlImage.hashCode;
   }
 }
