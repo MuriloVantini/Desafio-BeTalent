@@ -96,6 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
+        forceMaterialTransparency: true,
         toolbarHeight: 68,
         leading: Transform.translate(
           offset: const Offset(20, 0),
@@ -133,80 +134,84 @@ class _MyHomePageState extends State<MyHomePage> {
                   if (employeeStore.erro.value.isNotEmpty) {
                     return Text('Nenhum funcionário encontrado.', style: Theme.of(context).textTheme.titleSmall);
                   }
-                  return ExpansionPanelList(
-                      elevation: 1,
-                      expandIconColor: MyStyles.primary,
-                      animationDuration: const Duration(milliseconds: 300),
-                      expansionCallback: (index, isExpanded) {
-                        setState(() {
-                          this.isExpanded[index] = isExpanded;
-                        });
-                      },
-                      children: employeeStore.state.value.asMap().entries.map((entry) {
-                        final employee = entry.value;
-                        final index = entry.key;
-                        var dateFormatter = DateFormat('dd/MM/yyyy');
-                        var formattedAdmissionDate = dateFormatter.format(employee.admissionDate);
-                        return ExpansionPanel(
-                          isExpanded: isExpanded[index],
-                          canTapOnHeader: true,
-                          backgroundColor: Colors.white,
-                          headerBuilder: (context, isExpanded) {
-                            return Padding(
-                              padding: const EdgeInsets.only(top: 13.5, bottom: 12.5),
-                              child: Row(
-                                children: [
-                                  const SizedBox(width: 16),
-                                  CircleAvatar(backgroundImage: NetworkImage(employee.urlImage), radius: 34),
-                                  const SizedBox(width: 24),
-                                  Flexible(
-                                    child: Text(
-                                      employee.name,
-                                      style: Theme.of(context).textTheme.titleSmall,
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                          body: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 31),
-                            child: Column(
+                  return Column(
+                    children: [
+                      Container(
+                        decoration: const BoxDecoration(color: MyStyles.blue10, borderRadius: BorderRadius.vertical(top: Radius.circular(14))),
+                        child: LayoutBuilder(
+                          builder: (context, constraints) => Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 14.5, vertical: 14),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                panelContent(context, employee.job, "Cargo"),
-                                panelContent(context, formattedAdmissionDate, "Data de admissão"),
-                                panelContent(context, formatPhoneNumber(employee.phone), "Telefone"),
+                                Row(
+                                  children: [
+                                    SizedBox(width: constraints.maxWidth * (30 / 100) - 10, child: const Text('Foto')),
+                                    SizedBox(width: constraints.maxWidth * (55 / 100) - 10, child: const Text('Nome')),
+                                  ],
+                                ),
+                                SizedBox(width: constraints.maxWidth * (15 / 100) - 9, child: const Icon(Icons.circle, size: 8)),
                               ],
                             ),
                           ),
-                        );
-                      }).toList());
-
-                  // Table(
-                  //   border: const TableBorder.symmetric(outside: BorderSide(color: MyStyles.gray10), borderRadius: BorderRadius.all(Radius.circular(8)), inside: BorderSide.none),
-                  //   columnWidths: const {
-                  //     0: FlexColumnWidth(2),
-                  //     1: FlexColumnWidth(6),
-                  //     2: FlexColumnWidth(2),
-                  //   },
-                  //   children: employeeStore.state.value.map((employee) {
-                  //     return TableRow(
-                  //       children: [
-                  //         TableCell(
-                  //           child: CircleAvatar(backgroundImage: NetworkImage(employee.urlImage), radius: 34,),
-                  //         ),
-                  //         TableCell(
-                  //           child: Text(employee.name),
-                  //         ),
-                  //         TableCell(
-                  //           child: IconButton(onPressed: () {}, icon: const Icon(Icons.keyboard_arrow_down_rounded)),
-                  //         ),
-                  //       ],
-                  //     );
-                  //   }).toList(),
-                  // );
+                        ),
+                      ),
+                      ExpansionPanelList(
+                        elevation: 1,
+                        dividerColor: MyStyles.gray10,
+                        expandIconColor: MyStyles.primary,
+                        animationDuration: const Duration(milliseconds: 300),
+                        expansionCallback: (index, isExpanded) {
+                          setState(() {
+                            this.isExpanded[index] = isExpanded;
+                          });
+                        },
+                        children: employeeStore.state.value.asMap().entries.map((entry) {
+                          final employee = entry.value;
+                          final index = entry.key;
+                          var dateFormatter = DateFormat('dd/MM/yyyy');
+                          var formattedAdmissionDate = dateFormatter.format(employee.admissionDate);
+                          return ExpansionPanel(
+                            splashColor: MyStyles.blue10,
+                            isExpanded: isExpanded[index],
+                            canTapOnHeader: true,
+                            backgroundColor: Colors.white,
+                            headerBuilder: (context, isExpanded) {
+                              return Padding(
+                                padding: const EdgeInsets.only(top: 13.5, bottom: 12.5),
+                                child: Row(
+                                  children: [
+                                    const SizedBox(width: 16),
+                                    CircleAvatar(backgroundImage: NetworkImage(employee.urlImage), radius: 34),
+                                    const SizedBox(width: 24),
+                                    Flexible(
+                                      child: Text(
+                                        employee.name,
+                                        style: Theme.of(context).textTheme.titleSmall,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                            body: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 31),
+                              child: Column(
+                                children: [
+                                  panelContent(context, employee.job, "Cargo"),
+                                  panelContent(context, formattedAdmissionDate, "Data de admissão"),
+                                  panelContent(context, formatPhoneNumber(employee.phone), "Telefone"),
+                                ],
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                      const SizedBox(height: 70),
+                    ],
+                  );
                 },
               )
             ],
